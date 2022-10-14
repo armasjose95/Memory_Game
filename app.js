@@ -62,13 +62,26 @@ cardArray.sort(() => 0.5 - Math.random()) //This is how you sort the array rando
 const gridDisplay = document.querySelector('#grid') 
 
 
+const cardsChosen = [] // We are getting the name back from our random card array and we put it into this array.
+
+
 
 function createBoard () {    //need an element for each item in the array
-    for (let i = 0; i < 10; i ++) {      //For loop: start from 0 and as long as i is < than 10, we increment by 1.
+    for (let i = 0; i < cardArray.length; i ++) {      //For loop: get array's lenght(12),loops as many elements in array, we increment by 1.
         const card = document.createElement('img')  //create an img tag each time with the index number from 0-9.
         card.setAttribute('src', 'images/blank.png')  // set src attribute to the image. See path to the blank images file in console.
-        console.log(card, i) 
+        card.setAttribute('data-id' , i) // each card/image has an id that is unqiue
+        card.addEventListener('click', flipCard) // only want to call function flipCard if we click on the card (callback)
+        gridDisplay.append(card)
     }  
 }
 
 createBoard()  // call function
+
+function flipCard() {
+    console.log(cardArray) // consoling cardArray after the shuffle
+    const cardId = this.getAttribute('data-id')    //This lets us interact with whatever element we click. getAttribute to get its data-id & saving it as cardId
+    cardsChosen.push(cardArray[cardId].name) //push in the name of each object to know exactly which card we clicked & pass it into our array.
+    console.log('clicked', cardId) // Show us cardId after each click because we pass it through
+    console.log(cardsChosen)
+}
