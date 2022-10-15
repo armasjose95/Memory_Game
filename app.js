@@ -64,6 +64,8 @@ const gridDisplay = document.querySelector('#grid')
 
 const cardsChosen = [] // We are getting the name back from our random card array and we put it into this array.
 
+const cardsChosenIds = [] // when we push the card in, we're pushing the name in but also pushing its id in.
+
 
 
 function createBoard () {    //need an element for each item in the array
@@ -78,10 +80,31 @@ function createBoard () {    //need an element for each item in the array
 
 createBoard()  // call function
 
+
+function checkMatch() {
+    const cards = document.querySelectorAll('#grid img') // Looks for ALL the cards with the img elements that live inside my div with the id of grid.
+    console.log(cards)
+
+    console.log('Check for Match!')
+    if (cardsChosen[0] == cardsChosen[1]) {   //Get both of the items in my chosenCard array & check if they match
+        alert('You matched cards!') // if true then we know it's a match
+        cards[cardsChosenIds[0]].setAttribute('src', 'images/white.png') //first img turns white to indicate you found a match
+        cards[cardsChosenIds[1]].setAttribute('src', 'images/white.png')//second img turns white to indicate you found a match
+
+    }
+}
+
+
 function flipCard() {
     console.log(cardArray) // consoling cardArray after the shuffle
     const cardId = this.getAttribute('data-id')    //This lets us interact with whatever element we click. getAttribute to get its data-id & saving it as cardId
     cardsChosen.push(cardArray[cardId].name) //push in the name of each object to know exactly which card we clicked & pass it into our array.
+    cardsChosenIds.push(cardId) // push in the card id into the chosen ids
+    console.log(cardsChosenIds)
     console.log('clicked', cardId) // Show us cardId after each click because we pass it through
     console.log(cardsChosen)
+    this.setAttribute('src' , cardArray[cardId].img) //when card flips we see the image
+    if (cardsChosen.length === 2) {
+        setTimeout(checkMatch, 500)
+    }
 }
