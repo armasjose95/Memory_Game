@@ -61,10 +61,15 @@ cardArray.sort(() => 0.5 - Math.random()) //This is how you sort the array rando
 
 const gridDisplay = document.querySelector('#grid') 
 
+//if we want to replace this with an empty array, can't be const. We want to stat process again
 
-const cardsChosen = [] // We are getting the name back from our random card array and we put it into this array.
+const resultDisplay = document.querySelector('#result') // show it in the result | grab span id result tag 
 
-const cardsChosenIds = [] // when we push the card in, we're pushing the name in but also pushing its id in.
+let cardsChosen = [] // We are getting the name back from our random card array and we put it into this array.
+
+let cardsChosenIds = [] // when we push the card in, we're pushing the name in but also pushing its id in.
+
+const cardsWon = [] //want to know exactly how many matches we have
 
 
 
@@ -83,15 +88,37 @@ createBoard()  // call function
 
 function checkMatch() {
     const cards = document.querySelectorAll('#grid img') // Looks for ALL the cards with the img elements that live inside my div with the id of grid.
+    const optionOneId = cardsChosenIds[0]
+    const optionTwoId = cardsChosenIds[1]
     console.log(cards)
-
     console.log('Check for Match!')
+    if (optionOneId == optionTwoId) {
+        cards[optionOneId].setAttribute('src', 'images/blank.png') // if we match, flip them back to origianl image
+        cards[optionTwoId].setAttribute('src', 'images/blank.png') // if we match, flip them back to origianl image
+        alert('You clicked the same image!') 
+    }
+
+
     if (cardsChosen[0] == cardsChosen[1]) {   //Get both of the items in my chosenCard array & check if they match
         alert('You matched cards!') // if true then we know it's a match
-        cards[cardsChosenIds[0]].setAttribute('src', 'images/white.png') //first img turns white to indicate you found a match
-        cards[cardsChosenIds[1]].setAttribute('src', 'images/white.png')//second img turns white to indicate you found a match
-
+        cards[optionOneId].setAttribute('src', 'images/white.png') //first img turns white to indicate you found a match
+        cards[optionTwoId].setAttribute('src', 'images/white.png')//second img turns white to indicate you found a match
+        cards[optionOneId].removeEventListener('click', flipCard) // want to remove ability from clicking on matched cards
+        cards[optionTwoId].removeEventListener('click', flipCard) // want to remove ability from clicking on matched cards
+        cardsWon.push(cardsChosen) //pushes in how many matches we have
+    } else {
+        cards[optionOneId].setAttribute('src', 'images/blank.png') // if no match flip them back to origianl image
+        cards[optionTwoId].setAttribute('src', 'images/blank.png') // if no match flip them back to origianl image
+        alert('Try Again!')
     }
+
+    resultDisplay.innerHTML = cardsWon.length // if we push something into the cardsWon array, you get 1pt each time
+    cardsChosen = [] // can restart the game
+    cardsChosenIds = []  // can restart the game
+
+    if (cardsWon.length == cardArray.length/2) {   //12 cards so we can only get 6 matches
+        resultDisplay.innerHTML = 'Congratulations, you matched all the cards!'
+    }  
 }
 
 
